@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>玄夜守護・幸運黑貓的神奇御神殿 🐾</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;600;800&family=Zen+Maru+Gothic:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body class="theme-night">
+  <!-- 背景動態粒子與星星 -->
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- 浮動背景裝飾 -->
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+
+  <!-- 頂部導航列與狀態 -->
+  <header class="app-header">
+    <div class="brand">
+      <span class="brand-paw">🐾</span>
+      <div class="brand-text">
+        <h1>玄夜守護 <span>・幸運黑貓殿堂</span></h1>
+        <p class="subtitle">Black Cat Guardian & Luck Sanctuary</p>
+      </div>
+    </div>
+    
+    <div class="header-controls">
+      <div class="sound-toggle-btn" id="soundBtn" title="切換音效">
+        <span class="icon">🔔</span>
+        <span class="label">音效：開</span>
+      </div>
+      <div class="theme-toggle-btn" id="themeBtn" title="切換神社晝夜">
+        <span class="icon">🌙</span>
+        <span class="label">星夜模式</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主要互動舞台 -->
+  <main class="main-container">
+    <!-- 左側：幸運狀態與互動選單 -->
+    <aside class="sidebar-panel left-panel">
+      <!-- 幸運值蓄力儀 -->
+      <div class="glass-card luck-meter-card">
+        <div class="card-header">
+          <span class="badge">幸運共鳴</span>
+          <h3>黑貓靈氣指數</h3>
+        </div>
+        <div class="meter-bar-container">
+          <div class="meter-bar" id="luckMeterBar" style="width: 35%;">
+            <span class="meter-sparkle"></span>
+          </div>
+        </div>
+        <div class="meter-stats">
+          <span class="luck-level" id="luckLevelTitle">Lv.1 初識黑貓</span>
+          <span class="luck-pct" id="luckPct">35%</span>
+        </div>
+        <p class="meter-hint">✨ 撫摸黑貓、餵食小魚乾或抽籤可注入好運靈氣！</p>
+      </div>
+
+      <!-- 互動模式切換 -->
+      <div class="glass-card mode-card">
+        <h3>互動體驗模式</h3>
+        <div class="mode-buttons">
+          <button class="mode-btn active" data-mode="pet" id="modePet">
+            <span class="btn-emoji">🤲</span>
+            <div class="btn-info">
+              <strong>溫柔撫摸</strong>
+              <small>摸摸黑貓會發出呼嚕聲</small>
+            </div>
+          </button>
+          <button class="mode-btn" data-mode="laser" id="modeLaser">
+            <span class="btn-emoji">🔴</span>
+            <div class="btn-info">
+              <strong>追逐紅點</strong>
+              <small>黑貓會專注追著雷射光</small>
+            </div>
+          </button>
+          <button class="mode-btn" data-mode="feed" id="modeFeed">
+            <span class="btn-emoji">🐟</span>
+            <div class="btn-info">
+              <strong>餵小魚乾</strong>
+              <small>獎勵黑貓守護神的美食</small>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- 今日幸運指南小卡 -->
+      <div class="glass-card daily-guide-card">
+        <div class="guide-header">
+          <span>🔮 今日黑貓指引</span>
+          <button class="refresh-guide-btn" id="refreshGuideBtn" title="重新感應">🔄</button>
+        </div>
+        <div class="guide-content">
+          <div class="guide-item">
+            <span class="g-label">幸運顏色：</span>
+            <span class="g-val color-tag" id="luckyColorTag"><span class="color-dot" style="background: #9d4edd;"></span> 曜黑與深紫</span>
+          </div>
+          <div class="guide-item">
+            <span class="g-label">幸運數字：</span>
+            <span class="g-val" id="luckyNum">7 與 9</span>
+          </div>
+          <div class="guide-item">
+            <span class="g-label">開運物：</span>
+            <span class="g-val" id="luckyItem">黑曜石、鈴鐺御守</span>
+          </div>
+          <p class="cat-whisper" id="catWhisper">「在西方傳說中，黑貓是靈通的象徵；在東方，黑貓能鎮宅辟邪、驅走厄運！」</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- 中央：幸運黑貓本體與守護神殿 -->
+    <section class="stage-center">
+      <div class="stage-backdrop">
+        <!-- 神社御幣與金色圓月 -->
+        <div class="mystic-moon"></div>
+        <div class="floating-runes">
+          <span class="rune" style="--i:1">✦</span>
+          <span class="rune" style="--i:2">⋆</span>
+          <span class="rune" style="--i:3">✧</span>
+          <span class="rune" style="--i:4">✦</span>
+          <span class="rune" style="--i:5">⋆</span>
+        </div>
+      </div>
+
+      <!-- 貓咪說話氣泡 -->
+      <div class="cat-dialog-bubble" id="catBubble">
+        <span class="bubble-text" id="bubbleText">你好呀！我是你的專屬幸運黑貓「玄寶」，快來摸摸我吧！🐾</span>
+        <div class="bubble-tail"></div>
+      </div>
+
+      <!-- 黑貓主體容器 -->
+      <div class="cat-stage-wrapper" id="catStage">
+        <!-- 雷射光點（追逐模式時出現） -->
+        <div class="laser-dot" id="laserDot"></div>
+
+        <!-- 浮動小魚乾容器 -->
+        <div class="treats-container" id="treatsContainer"></div>
+
+        <!-- 黑貓 SVG/CSS 生動角色 -->
+        <div class="cat-character" id="catCharacter">
+          <!-- 貓耳朵 -->
+          <div class="cat-ears">
+            <div class="ear ear-left">
+              <div class="ear-inner"></div>
+            </div>
+            <div class="ear ear-right">
+              <div class="ear-inner"></div>
+            </div>
+          </div>
+
+          <!-- 貓頭部 -->
+          <div class="cat-head" id="catHead">
+            <!-- 額頭光澤 -->
+            <div class="head-shine"></div>
+
+            <!-- 貓眼睛容器（支援滑鼠視線追蹤） -->
+            <div class="cat-eyes">
+              <!-- 左眼 -->
+              <div class="eye eye-left" id="eyeLeft">
+                <div class="pupil-wrapper" id="pupilLeft">
+                  <div class="pupil">
+                    <div class="pupil-reflection"></div>
+                  </div>
+                </div>
+                <div class="eyelid eyelid-upper"></div>
+                <div class="eyelid eyelid-lower"></div>
+              </div>
+              <!-- 右眼 -->
+              <div class="eye eye-right" id="eyeRight">
+                <div class="pupil-wrapper" id="pupilRight">
+                  <div class="pupil">
+                    <div class="pupil-reflection"></div>
+                  </div>
+                </div>
+                <div class="eyelid eyelid-upper"></div>
+                <div class="eyelid eyelid-lower"></div>
+              </div>
+            </div>
+
+            <!-- 鼻子與嘴巴 -->
+            <div class="cat-face-center">
+              <div class="cat-nose"></div>
+              <div class="cat-mouth">
+                <div class="mouth-line mouth-left"></div>
+                <div class="mouth-line mouth-right"></div>
+                <div class="cat-tongue" id="catTongue"></div>
+              </div>
+            </div>
+
+            <!-- 鬍鬚 -->
+            <div class="whiskers whiskers-left">
+              <span class="whisker w1"></span>
+              <span class="whisker w2"></span>
+              <span class="whisker w3"></span>
+            </div>
+            <div class="whiskers whiskers-right">
+              <span class="whisker w1"></span>
+              <span class="whisker w2"></span>
+              <span class="whisker w3"></span>
+            </div>
+          </div>
+
+          <!-- 紅色幸運項圈與金鈴鐺 -->
+          <div class="cat-collar">
+            <div class="collar-band"></div>
+            <div class="golden-bell" id="goldenBell" title="點擊搖響幸運金鈴！">
+              <div class="bell-body">
+                <div class="bell-slit"></div>
+                <div class="bell-hole"></div>
+              </div>
+              <div class="bell-ring-wave"></div>
+            </div>
+          </div>
+
+          <!-- 貓身體與前爪 -->
+          <div class="cat-body">
+            <div class="body-torso">
+              <div class="chest-fur"></div>
+            </div>
+            <div class="cat-paws">
+              <div class="paw paw-left" id="pawLeft">
+                <div class="paw-toe"></div>
+                <div class="paw-toe"></div>
+                <div class="paw-toe"></div>
+                <div class="paw-pad"></div>
+              </div>
+              <div class="paw paw-right" id="pawRight">
+                <div class="paw-toe"></div>
+                <div class="paw-toe"></div>
+                <div class="paw-toe"></div>
+                <div class="paw-pad"></div>
+              </div>
+            </div>
+            <!-- 搖晃的黑貓尾巴 -->
+            <div class="cat-tail" id="catTail">
+              <div class="tail-joint-1">
+                <div class="tail-joint-2">
+                  <div class="tail-joint-3"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 祥雲絲絨軟墊座 -->
+          <div class="cat-cushion">
+            <div class="cushion-top"></div>
+            <div class="cushion-tassels">
+              <span class="tassel t-l"></span>
+              <span class="tassel t-r"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 點擊觸發愛心/幸運粒子容器 -->
+        <div class="interaction-effects" id="interactionEffects"></div>
+      </div>
+
+      <!-- 快捷守護指令列 -->
+      <div class="quick-action-bar">
+        <button class="action-pill" id="actionPurr">
+          <span>😽 聽呼嚕聲</span>
+        </button>
+        <button class="action-pill" id="actionMeow">
+          <span>🐾 喵一聲</span>
+        </button>
+        <button class="action-pill" id="actionBell">
+          <span>🔔 敲響開運鈴</span>
+        </button>
+        <button class="action-pill" id="actionDispel">
+          <span>✨ 厄運驅散波</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- 右側：抽籤與祈願互動殿堂 -->
+    <aside class="sidebar-panel right-panel">
+      <!-- 御神籤 (Omikuji) -->
+      <div class="glass-card omikuji-card">
+        <div class="card-header">
+          <span class="badge badge-gold">每日御籤</span>
+          <h3>黑貓靈驗神籤</h3>
+        </div>
+        <p class="card-desc">誠心向黑貓許願，搖晃籤筒抽取今日運勢！</p>
+        
+        <div class="omikuji-box" id="omikujiBox">
+          <div class="cylinder-wrapper" id="cylinderWrapper">
+            <div class="cylinder">
+              <span class="cylinder-text">黑貓御籤</span>
+            </div>
+            <div class="cylinder-stick" id="cylinderStick"></div>
+          </div>
+          <button class="draw-btn" id="drawBtn">
+            <span class="btn-sparkle">✨</span>
+            <span>搖籤祈福</span>
+          </button>
+        </div>
+
+        <!-- 抽出的籤詩結果卡片（預設隱藏或初次顯示） -->
+        <div class="fortune-result" id="fortuneResult" style="display: none;">
+          <div class="fortune-badge" id="fortuneRank">大吉</div>
+          <h4 class="fortune-title" id="fortuneTitle">「黑貓回眸，萬事如意」</h4>
+          <p class="fortune-poem" id="fortunePoem">夜幕低垂星火燦，靈貓昂首福源開。<br>心之所向皆成真，貴人相伴喜事來。</p>
+          <div class="fortune-advice">
+            <strong>黑貓指點：</strong><span id="fortuneAdvice">今天直覺特別敏銳，大膽嘗試新想法！</span>
+          </div>
+          <button class="close-fortune-btn" id="closeFortuneBtn">收下好運 🌟</button>
+        </div>
+      </div>
+
+      <!-- 許願池與黑貓金爪印章 -->
+      <div class="glass-card wish-card">
+        <div class="card-header">
+          <span class="badge badge-purple">黑貓御守</span>
+          <h3>祈願符金印蓋章</h3>
+        </div>
+        <p class="card-desc">寫下你心中最渴望實現的願望：</p>
+        
+        <div class="wish-form">
+          <div class="wish-types" id="wishTypes">
+            <button class="wish-type-btn active" data-type="事業學業">事業學業 🎓</button>
+            <button class="wish-type-btn" data-type="財富招財">招財進寶 💰</button>
+            <button class="wish-type-btn" data-type="平安健康">健康平安 🍀</button>
+            <button class="wish-type-btn" data-type="美好姻緣">幸福良緣 💖</button>
+          </div>
+          <div class="input-group">
+            <input type="text" id="wishInput" placeholder="例如：期末考滿分 / 專案順利上線..." maxlength="30">
+            <button id="sendWishBtn" class="send-wish-btn">蓋金爪印 ✨</button>
+          </div>
+        </div>
+
+        <!-- 已祈願御守列表 -->
+        <div class="wishes-list" id="wishesList">
+          <div class="empty-wish-tip" id="emptyWishTip">目前尚未祈願，輸入願望讓黑貓施加金爪祝福吧！</div>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- 頁尾祝福 -->
+  <footer class="app-footer">
+    <p>✦ 願神秘優雅的黑貓，隨時隨地守護你的好運與平安 ✦</p>
+    <p class="footer-small">傳說中看見黑貓是幸運的兆頭，撫摸黑貓能把厄運全部融化成暖意 🐾</p>
+  </footer>
+
+  <!-- 聲音與互動腳本 -->
+  <script src="script.js"></script>
+</body>
+</html>
