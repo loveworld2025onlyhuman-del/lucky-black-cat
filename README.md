@@ -37,15 +37,3 @@
    - 🌙/☀️ 日夜模式切換（星夜神社 / 晨曦神社）。
    - 支援全尺寸桌機、筆電以及手機觸控螢幕。
 
----
-
-## 🚀 如何開啟與運行
-
-你可以直接在檔案總管中雙擊開啟：
-`C:\Users\User\.gemini\antigravity\scratch\lucky-black-cat\index.html`
-
-或在終端機（PowerShell）中輸入：
-```powershell
-Start-Process "C:\Users\User\.gemini\antigravity\scratch\lucky-black-cat\index.html"
-```
-即可立即在預設瀏覽器中開啟體驗！
